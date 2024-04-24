@@ -14,6 +14,7 @@ import com.GreenFleet.GreenFleet.Repositories.Company.EmployeeRepository;
 import com.GreenFleet.GreenFleet.Repositories.Company.RolRepository;
 import com.GreenFleet.GreenFleet.Repositories.Company.UserRolRepository;
 import com.GreenFleet.GreenFleet.Repositories.TransactionDetail.CarRepository;
+import com.GreenFleet.GreenFleet.Repositories.TransactionDetail.ClientRepository;
 import com.GreenFleet.GreenFleet.Repositories.TransactionDetail.TransactionDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Set;
 
 @SpringBootApplication
@@ -35,58 +37,59 @@ public class GreenFleetApplication {
 		SpringApplication.run(GreenFleetApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner initData(CompanyRepository companyRepository, EmployeeRepository employeeRepository, RolRepository rolRepository, UserRolRepository UserRolRepository, CommuneRepository communeRepository, ProvinceRepository provinceRepository, RegionRepository regionRepository, LocationRepository locationRepository, ChargingStationRepository chargingStationRepository, CarRepository carRepository, TransactionDetailRepository transactionDetailRepository) {
+	public CommandLineRunner initData(CompanyRepository companyRepository, EmployeeRepository employeeRepository, RolRepository rolRepository, UserRolRepository UserRolRepository, CommuneRepository communeRepository, ProvinceRepository provinceRepository, RegionRepository regionRepository, LocationRepository locationRepository, ChargingStationRepository chargingStationRepository, CarRepository carRepository, TransactionDetailRepository transactionDetailRepository, ClientRepository clientRepository) {
 		return (args) -> {
-			Rol rol = new Rol("ADMIN");
-			rolRepository.save(rol);
 
-			// Crear un nuevo usuario de rol asociado al rol creado
-			UserRol userRol = new UserRol(rol);
-			UserRolRepository.save(userRol);
+			// 1. Create Location (Assuming independent creation)
+			Commune santiagoCommune = new Commune("Santiago");
+			communeRepository.save(santiagoCommune);
 
-			// Crear una nueva compañía
-			Company company = new Company("Besap", "besap@admin.com", 999999, 99999 - 9, "A", "admin", true, LocalDate.now());
-			companyRepository.save(company);
+			Province santiagoProvince = new Province("Santiago");
+			provinceRepository.save(santiagoProvince);
 
-			// Crear un nuevo empleado y asignarle la compañía y el usuario de rol creados
-			Employee employee = new Employee("admin", "admin", "admin", "admin@admin.com", "admin", ("admin"), company, userRol, LocalDate.now());
-			employee.setCompany(company);
-			employeeRepository.save(employee);
+			Region metropolitanaRegion = new Region("Metropolitana", 13);
+			regionRepository.save(metropolitanaRegion);
 
-			Commune commune = new Commune("Vitacura");
-			communeRepository.save(commune);
+			Location companyLocation = new Location("101 Main Street", santiagoCommune, santiagoProvince, metropolitanaRegion);
+			locationRepository.save(companyLocation);
 
-			Province province = new Province("Santiago");
-			provinceRepository.save(province);
+			// 2. Create Company
+			Company company = new Company("GreenTech Solutions", "greentech@example.com", 123456789, 0, "B", "securePassword", true, LocalDate.now());
+			companyRepository.save(company); // Save the company first
 
-			Region region = new Region("Metropolitana", 5);
-			regionRepository.save(region);
-
-			Location location = new Location("Av Vitacura 1", commune, province, region);
-			location.setCompany(company);
-			company.getLocations().add(location);
-			locationRepository.save(location);
-
-			ChargingStation chargingStation = new ChargingStation("Estación 1", BigDecimal.ZERO, true, company, LocalDate.now());
-			chargingStation.setLocation(location);
-			chargingStationRepository.save(chargingStation);
-
-			TransactionDetail transaction = new TransactionDetail(LocalDate.now(), LocalDate.now().plusDays(1), BigDecimal.TEN, 100, null);
-			transactionDetailRepository.save(transaction);
-
-			Client client = new Client("Pepito", "Perez", "123456789", "pepito@admin.com", "12345", company, userRol, LocalDate.now());
+			// 3. Create Charging Station (associated with saved company)
+			ChargingStation station1 = new ChargingStation("Charging Station 1", new BigDecimal(50.0), true, company, LocalDate.now());
 
 
-			Car car = new Car("ABC123", "Modelo", null);
-			carRepository.save(car);
+			company.getChargingStations().add(station1);
+			chargingStationRepository.save(station1);
 
-			transaction.setClient(client);
-			car.setClient(client);
+			// Create roles (assuming they don't exist already)
+			Rol adminRole = new Rol("ADMIN");
+			Rol userRole = new Rol("USER");
+			rolRepository.saveAll(Arrays.asList(adminRole, userRole)); // Save roles to the repository
+
+			// Create a user role
+			UserRol userRol = new UserRol(adminRole);
+			UserRolRepository.save(userRol); // Save user role to the repository
+
+			// Create an employee object
+			Employee employee = new Employee("John", "Doe", "johndoe", "johndoe@example.com", "securePassword", "1234567890", company, userRol, LocalDate.now());
 
 
-			transactionDetailRepository.save(transaction);
-			carRepository.save(car);
 
+
+			// Create a client object
+			Client client1 = new Client("Jane", "Smith", "janesmith@example.com", 987654321, 7, "securePassword", "9876543210");
+			clientRepository.save(client1); // Save client to the repository
+
+			// Create a transaction detail object
+			TransactionDetail transaction = new TransactionDetail(LocalDate.now(), LocalDate.now().plusDays(1), new BigDecimal(20.0), 120, client1);
+			transactionDetailRepository.save(transaction); // Save transaction detail to the repository
+
+			// Create a car object
+			Car car1 = new Car("DEF456", "Tesla Model S", client1);
+			carRepository.save(car1); // Save car to the repository
 		};
 
 	}

@@ -3,6 +3,7 @@ package com.GreenFleet.GreenFleet.Models.Company;
 import com.GreenFleet.GreenFleet.Models.ChargingStation.ChargingStation;
 import com.GreenFleet.GreenFleet.Models.ChargingStation.Location;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ public class Company {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
     private Set<Employee> employees = new HashSet<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
     private Set<ChargingStation> chargingStations = new HashSet<>();
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
@@ -57,6 +59,8 @@ public class Company {
         employee.setCompany(this);
         this.employees.add(employee);
     }
+
+
 
     public Long getId() {
         return id;

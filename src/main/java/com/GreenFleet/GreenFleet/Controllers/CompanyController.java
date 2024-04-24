@@ -7,6 +7,7 @@ import com.GreenFleet.GreenFleet.Models.ChargingStation.Location;
 import com.GreenFleet.GreenFleet.Models.ChargingStation.Province;
 import com.GreenFleet.GreenFleet.Models.ChargingStation.Region;
 import com.GreenFleet.GreenFleet.Models.Company.Company;
+import com.GreenFleet.GreenFleet.Repositories.ChargingStation.ChargingStationRepository;
 import com.GreenFleet.GreenFleet.Repositories.Company.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class CompanyController {
 
     @Autowired
     private CompanyRepository companyRepository;
+
 
     @GetMapping("/company")
     public List<CompanyDTO> getCompaniesDTO() {
