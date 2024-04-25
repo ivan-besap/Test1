@@ -1,4 +1,4 @@
-package com.GreenFleet.GreenFleet.Models.Simulador;
+package com.GreenFleet.GreenFleet.Models.Simulador.DTOs;
 
 import java.time.LocalDateTime;
 

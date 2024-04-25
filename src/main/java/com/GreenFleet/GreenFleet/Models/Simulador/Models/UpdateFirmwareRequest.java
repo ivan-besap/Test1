@@ -1,31 +1,41 @@
-package com.GreenFleet.GreenFleet.Models.Simulador;
+package com.GreenFleet.GreenFleet.Models.Simulador.Models;
 
 import com.sun.istack.NotNull;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
 public class UpdateFirmwareRequest {
 
-    @NotNull// Add validation (optional)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
     private String location;
-    @NotNull // Add validation (optional)
+    @NotNull
     private LocalDateTime retrieveDate;
     private Integer retries;
     private Integer retryInterval;
 
     public UpdateFirmwareRequest() {
     }
-
     public UpdateFirmwareRequest(String location, LocalDateTime retrieveDate, Integer retries, Integer retryInterval) {
         this.location = location;
         this.retrieveDate = retrieveDate;
         this.retries = retries;
         this.retryInterval = retryInterval;
     }
-
     // Getters and setters
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getLocation() {
         return location;
     }
