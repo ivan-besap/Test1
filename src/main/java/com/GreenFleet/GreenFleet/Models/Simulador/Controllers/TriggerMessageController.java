@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class TriggerMessageController {
 
     @GetMapping("/triggerMessage")
-    public String triggerMessageResponse(@RequestParam("requestedMessage") String requestedMessage) {
-        // Simulación de la respuesta estática
+    public String triggerMessageResponse() {
         return "{\n" +
                 "    \"status\": \"Accepted\",\n" +
-                "    \"requestedMessage\": \"" + requestedMessage + "\"\n" +
+                "    \"requestedMessage\": \"StatusNotification\"\n" +
                 "}";
     }
+
 }

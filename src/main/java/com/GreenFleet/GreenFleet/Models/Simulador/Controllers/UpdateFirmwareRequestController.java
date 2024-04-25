@@ -15,7 +15,6 @@ public class UpdateFirmwareRequestController {
 
     @GetMapping("/updateFirmware")
     public String updateFirmwareResponse() {
-        // Simula una respuesta con información detallada
         return "{\n" +
                 "    \"status\": \"Accepted\",\n" +
                 "    \"message\": \"The firmware update request has been received and is being processed.\",\n" +

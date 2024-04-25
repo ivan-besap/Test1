@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class StopTransactionController {
     @GetMapping("/stopTransaction")
     public String stopTransactionResponse() {
-        // Respuesta estática para la solicitud StopTransaction
         return "{\n" +
                 "    \"idTagInfo\": {\n" +
                 "        \"status\": \"Accepted\"\n" +
